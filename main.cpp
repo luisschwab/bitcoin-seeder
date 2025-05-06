@@ -207,6 +207,7 @@ public:
     if (filter_whitelist.empty()) {
         filter_whitelist.insert(NODE_NETWORK | NODE_WITNESS);                        // x9
         filter_whitelist.insert(NODE_NETWORK | NODE_WITNESS | NODE_COMPACT_FILTERS); // x49
+        filter_whitelist.insert(NODE_UTREEXO);                                       // x1000000
         filter_whitelist.insert(NODE_NETWORK | NODE_WITNESS | NODE_UTREEXO);         // x1000009
         filter_whitelist.insert(NODE_NETWORK | NODE_WITNESS | NODE_COMPACT_FILTERS | NODE_UTREEXO); // x1000049
     }
