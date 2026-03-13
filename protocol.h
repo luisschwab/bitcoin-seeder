@@ -66,7 +66,8 @@ enum
     NODE_COMPACT_FILTERS = (1 << 6),
     NODE_NETWORK_LIMITED = (1 << 10),
     NODE_P2P_V2 = (1 << 11),
-    NODE_UTREEXO = (1 << 24),
+    NODE_UTREEXO = (1 << 12),
+    NODE_UTREEXO_ARCHIVE = (1 << 13),
 };
 
 class CAddress : public CService

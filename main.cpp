@@ -11,6 +11,7 @@
 
 #include "bitcoin.h"
 #include "db.h"
+#include "netbase.h"
 
 using namespace std;
 
@@ -102,17 +103,17 @@ public:
           host = optarg;
           break;
         }
-        
+
         case 'm': {
           mbox = optarg;
           break;
         }
-        
+
         case 'n': {
           ns = optarg;
           break;
         }
-        
+
         case 't': {
           int n = strtol(optarg, NULL, 10);
           if (n > 0 && n < 1000) nThreads = n;
@@ -205,11 +206,12 @@ public:
       }
     }
     if (filter_whitelist.empty()) {
-        filter_whitelist.insert(NODE_NETWORK | NODE_WITNESS);                        // x9
-        filter_whitelist.insert(NODE_NETWORK | NODE_WITNESS | NODE_COMPACT_FILTERS); // x49
-        filter_whitelist.insert(NODE_UTREEXO);                                       // x1000000
-        filter_whitelist.insert(NODE_NETWORK | NODE_WITNESS | NODE_UTREEXO);         // x1000009
-        filter_whitelist.insert(NODE_NETWORK | NODE_WITNESS | NODE_COMPACT_FILTERS | NODE_UTREEXO); // x1000049
+        filter_whitelist.insert(NODE_UTREEXO);                                                       // 0x1000
+        filter_whitelist.insert(NODE_NETWORK | NODE_WITNESS | NODE_UTREEXO);                         // 0x1009
+        filter_whitelist.insert(NODE_NETWORK | NODE_WITNESS | NODE_COMPACT_FILTERS | NODE_UTREEXO);  // 0x1049
+        filter_whitelist.insert(NODE_UTREEXO_ARCHIVE);                                               // 0x2000
+        filter_whitelist.insert(NODE_UTREEXO | NODE_UTREEXO_ARCHIVE);                                // 0x3000
+        filter_whitelist.insert(NODE_UTREEXO | NODE_UTREEXO_ARCHIVE | NODE_WITNESS | NODE_NETWORK);  // 0x3009
     }
     if (host != NULL && ns == NULL) showHelp = true;
     if (showHelp) fprintf(stderr, help, argv[0]);
@@ -245,7 +247,9 @@ extern "C" void* ThreadCrawler(void* data) {
       res.fGood = TestNode(res.service,res.nBanTime,res.nClientV,res.strClientV,res.nHeight,getaddr ? &addr : NULL, res.services);
     }
     db.ResultMany(ips);
-    db.Add(addr);
+    for (const CAddress& a : addr) {
+        db.Add(a);
+    }
   } while(1);
   return nullptr;
 }
