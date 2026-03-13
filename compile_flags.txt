@@ -1,0 +1,15 @@
+-std=c++11
+-x
+c++
+-I.
+-I/opt/homebrew/opt/boost/include
+-I/opt/homebrew/opt/openssl@3/include
+-Wall
+-Wno-unused
+-Wno-sign-compare
+-Wno-reorder
+-Wno-comment
+-O3
+-g0
+-march=native
+-pthread
